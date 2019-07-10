@@ -1,6 +1,8 @@
 package com.android.instagramclone;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -86,5 +88,10 @@ public class SignUp extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void onClickBtnGotoSignUpLogin (View v) {
+        Intent intent = new Intent(SignUp.this, SignUpLoginActivity.class);
+        startActivity(intent);
     }
 }
