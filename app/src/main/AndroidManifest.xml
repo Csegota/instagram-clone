@@ -22,9 +22,6 @@
         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".WelcomeActivity" />
-        <activity android:name=".SignUp" />
-        <activity android:name=".SignUpLoginActivity">
-        </activity>
 
         <meta-data
             android:name="com.parse.SERVER_URL"
