@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -33,8 +35,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnLogin.setOnClickListener(this);
         btnGotoSignup.setOnClickListener(this);
 
+        etLoginPassword.setOnKeyListener( new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent event) {
+
+                //If user presses enter button on virtual keyboard instead of signup button execute signup.
+                if (keyCode == KeyEvent.KEYCODE_ENTER &&
+                        event.getAction() == KeyEvent.ACTION_DOWN)  {
+                    onClick(btnLogin);
+                }
+                return false;
+            }
+        });
+
+        //Log out any current user. Token session issue.
         if (ParseUser.getCurrentUser() != null) {
-            ParseUser.getCurrentUser().logOut();
+            gotoSocialMediaActivity();
         }
     }
 
@@ -50,8 +66,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void done(ParseUser user, ParseException e) {
                         if (user != null && e == null) {
                             FancyToast.makeText(LoginActivity.this, "User Login Success.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
-                            Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                            startActivity(intent);
+                            gotoSocialMediaActivity();
                         } else {
                             FancyToast.makeText(LoginActivity.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
                         }
@@ -65,5 +80,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
                 break;
         }
+    }
+
+    //Hide user keyboard when user taps on empty area of the layout.
+    //Function is tied to onClick() of root ConstraintLayout
+    public void rootLayoutTapped(View view) {
+
+        try {
+
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+        } catch (Exception e ) {
+
+            e.printStackTrace();
+        }
+    }
+
+    private void gotoSocialMediaActivity() {
+
+        Intent intent = new Intent(LoginActivity.this, SocialMediaActivity.class);
+        startActivity(intent);
     }
 }
